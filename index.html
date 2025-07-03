@@ -1,14 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pokédex</title>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Pokédex</title>
+		<link rel="icon" href="./assets/icons/pokeball_icon.png" type="image/png" />
 
-    <link rel="stylesheet" href="./style.css">
-    <script src="./script.js"></script>
-</head>
-<body>
-    
-</body>
+		<link rel="stylesheet" href="./style.css" />
+		<link rel="stylesheet" href="./styles/standard.css" />
+		<script src="./scripts/templates.js"></script>
+		<script src="./script.js"></script>
+	</head>
+
+	<body>
+		<header>
+			<div class="headerContent">
+				<img
+					class="logo"
+					src="./assets/icons/pokeball_icon.png"
+					alt="Pokémon Logo"
+				/>
+				<h2>Pokédex</h2>
+			</div>
+		</header>
+
+		<div class="content">
+			<h1>Your Pokémon</h1>
+
+			<div id="pokemons"></div>
+			<button onclick="init()">Load more</button>
+		</div>
+	</body>
 </html>
