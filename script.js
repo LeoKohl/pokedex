@@ -1,4 +1,3 @@
-
 const TYPE_COLORS = {
 	normal: "#A8A77A",
 	fire: "#EE8130",
@@ -21,44 +20,80 @@ const TYPE_COLORS = {
 };
 
 let pokemonArray = [];
+let loadedPokemonIds = new Set();
+let offset = 0;
+let limit = 40;
 
-async function init() {
-	let response = await loadData(
-		"https://pokeapi.co/api/v2/pokemon?limit=10&offset=0"
-	);
-	await buildPokemonArray(response.results);
-	renderPokemons();
+function init() {
+	loadPokemon();
 	console.log(pokemonArray);
+	console.log(loadedPokemonIds);
 }
 
-async function loadData(path = "") {
+async function loadPokemon() {
+	toggleBtnLoading();
+	try {
+		await loadPokemonData();
+		renderPokemons();
+	} catch (error) {
+		console.error("Failed to load Pokémon:", error);
+		alert("Something went wrong. Please try again later.");
+	} finally {
+		toggleBtnLoading();
+	}
+}
+
+async function loadPokemonData() {
+	let response = await fetchData(
+		`https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`
+	);
+	await buildPokemonArray(response.results);
+	offset += limit;
+}
+
+async function fetchData(path = "") {
 	let response = await fetch(path);
 	return await response.json();
 }
 
 async function buildPokemonArray(pokemonNameArray) {
 	for (const pokemon of pokemonNameArray) {
-		let response = await loadData(pokemon.url);
-		pokemonArray.push(response);
+		let response = await fetchData(pokemon.url);
+		//prevent duplicates
+		if (!loadedPokemonIds.has(response.id)) {
+			loadedPokemonIds.add(response.id);
+			pokemonArray.push(response);
+		} else {
+			console.log(`Skipping duplicate: ${response.name} (#${response.id})`);
+		}
 	}
 }
 
 function renderPokemons() {
 	const pokemonsContainerRef = document.getElementById("pokemons");
-	pokemonsContainerRef.innerHTML = ""; // Clear previous content
+	pokemonsContainerRef.innerHTML = "";
 
 	for (const pokemon of pokemonArray) {
 		let typesHTML = pokemon.types
-			.map(
-				(t) => getPokemonTypesTemplate(t)
-			)
+			.map((type) => getPokemonTypesTemplate(type))
 			.join("");
 		let mainType = pokemon.types[0].type.name;
 		let bgColor = TYPE_COLORS[mainType] || "#777";
-		pokemonsContainerRef.innerHTML += getPokemonCardTemplate(pokemon, typesHTML, bgColor);
+		pokemonsContainerRef.innerHTML += getPokemonCardTemplate(
+			pokemon,
+			typesHTML,
+			bgColor
+		);
 	}
 }
 
 function capitalizeFirstLetter(string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function toggleBtnLoading() {
+	const btn = document.getElementById("loadMoreBtn");
+	const loading = document.getElementById("loading");
+	btn.disabled = !btn.disabled;
+	loading.classList.toggle("dNone");
 }

@@ -8,11 +8,12 @@
 
 		<link rel="stylesheet" href="./style.css" />
 		<link rel="stylesheet" href="./styles/standard.css" />
+		<link rel="stylesheet" href="./styles/assets.css">
 		<script src="./scripts/templates.js"></script>
 		<script src="./script.js"></script>
 	</head>
 
-	<body>
+	<body onload="init()">
 		<header>
 			<div class="headerContent">
 				<img
@@ -28,7 +29,11 @@
 			<h1>Your Pokémon</h1>
 
 			<div id="pokemons"></div>
-			<button onclick="init()">Load more</button>
+			<button id="loadMoreBtn" onclick="loadPokemon()">Load more</button>
+		</div>
+
+		<div id="loading" class="dNone">
+			<div class="spinner"></div>
 		</div>
 	</body>
 </html>

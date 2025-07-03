@@ -1,7 +1,7 @@
 
 function getPokemonCardTemplate(pokemon, typesHTML, bgColor) {
 	return /* HTML */ `
-		<div class="pokemon-card" style="background-color: ${bgColor}">
+		<div class="pokemon-card" style="--bg-color: ${bgColor}">
 			<div class="name-id">
 				<h3>${capitalizeFirstLetter(pokemon.name)}</h3>
 				<span class="pokemon-id">#${pokemon.id}</span>
@@ -17,8 +17,8 @@ function getPokemonCardTemplate(pokemon, typesHTML, bgColor) {
 	`;
 }
 
-function getPokemonTypesTemplate(t) {
+function getPokemonTypesTemplate(type) {
 	return /* HMTL */ `<p class="pokemon-type">${capitalizeFirstLetter(
-		t.type.name
+		type.type.name
 	)}</p>`;
 }
