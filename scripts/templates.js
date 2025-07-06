@@ -9,7 +9,7 @@ function getPokemonCardTemplate(pokemon, typesHTML, bgColor) {
 			<div class="types-img">
 				<div class="pokemon-types">${typesHTML}</div>
 				<img
-					src="${pokemon.sprites.other["official-artwork"].front_default}"
+					src="${pokemon.image}"
 					alt="${pokemon.name}"
 				/>
 			</div>

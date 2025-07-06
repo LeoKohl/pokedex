@@ -23,11 +23,16 @@ let pokemonArray = [];
 let loadedPokemonIds = new Set();
 let offset = 0;
 let limit = 40;
+let renderedCount = 0;
 
 function init() {
-	loadPokemon();
-	console.log(pokemonArray);
-	console.log(loadedPokemonIds);
+	loadSavedPokemons();
+	if (pokemonArray.length === 0) {
+		loadPokemon();
+	} else {
+		renderPokemons();
+	}
+	console.log(pokemonArray, loadedPokemonIds);
 }
 
 async function loadPokemon() {
@@ -35,6 +40,7 @@ async function loadPokemon() {
 	try {
 		await loadPokemonData();
 		renderPokemons();
+		savePokemons();
 	} catch (error) {
 		console.error("Failed to load Pokémon:", error);
 		alert("Something went wrong. Please try again later.");
@@ -57,23 +63,41 @@ async function fetchData(path = "") {
 }
 
 async function buildPokemonArray(pokemonNameArray) {
-	for (const pokemon of pokemonNameArray) {
-		let response = await fetchData(pokemon.url);
+	for (const pokemonName of pokemonNameArray) {
+		let responsePokemon = await fetchData(pokemonName.url);
 		//prevent duplicates
-		if (!loadedPokemonIds.has(response.id)) {
-			loadedPokemonIds.add(response.id);
-			pokemonArray.push(response);
+		if (!loadedPokemonIds.has(responsePokemon.id)) {
+			loadedPokemonIds.add(responsePokemon.id);
+			let pokemon = buildPokemonData(responsePokemon);
+			pokemonArray.push(pokemon);
 		} else {
 			console.log(`Skipping duplicate: ${response.name} (#${response.id})`);
 		}
 	}
 }
 
+function buildPokemonData(responsePokemon) {
+	return (pokemon = {
+		id: responsePokemon.id,
+		name: responsePokemon.name,
+		types: responsePokemon.types,
+		image: responsePokemon.sprites.other["official-artwork"].front_default,
+	});
+}
+
+function loadMore() {
+	if (renderedCount < pokemonArray.length) {
+		renderPokemons();
+	} else {
+		loadPokemon();
+	}
+}
+
 function renderPokemons() {
 	const pokemonsContainerRef = document.getElementById("pokemons");
-	pokemonsContainerRef.innerHTML = "";
+	const nextPokemons = pokemonArray.slice(renderedCount, renderedCount + limit);
 
-	for (const pokemon of pokemonArray) {
+	for (const pokemon of nextPokemons) {
 		let typesHTML = pokemon.types
 			.map((type) => getPokemonTypesTemplate(type))
 			.join("");
@@ -85,10 +109,9 @@ function renderPokemons() {
 			bgColor
 		);
 	}
-}
 
-function capitalizeFirstLetter(string) {
-	return string.charAt(0).toUpperCase() + string.slice(1);
+	renderedCount += nextPokemons.length;
+	savePokemons();
 }
 
 function toggleBtnLoading() {
@@ -96,4 +119,32 @@ function toggleBtnLoading() {
 	const loading = document.getElementById("loading");
 	btn.disabled = !btn.disabled;
 	loading.classList.toggle("dNone");
+}
+
+function capitalizeFirstLetter(string) {
+	return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function savePokemons() {
+	localStorage.setItem("pokemonArray", JSON.stringify(pokemonArray));
+	localStorage.setItem("loadedPokemonIds", JSON.stringify([...loadedPokemonIds]));
+	localStorage.setItem("offset", offset);
+}
+
+function loadSavedPokemons() {
+	const savedPokemons = JSON.parse(
+		localStorage.getItem("pokemonArray") || "[]"
+	);
+	const savedIds = JSON.parse(localStorage.getItem("loadedPokemonIds") || "[]");
+	offset = parseInt(localStorage.getItem("offset") || "0", 10);
+
+	pokemonArray = savedPokemons;
+	loadedPokemonIds = new Set(savedIds);
+}
+
+function resetPokedex() {
+	if (confirm("Are you sure you want to reset your Pokédex?")) {
+		localStorage.clear();
+		location.reload();
+	}
 }
