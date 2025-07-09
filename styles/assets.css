@@ -30,3 +30,46 @@
 		transform: rotate(360deg);
 	}
 }
+
+.buttons {
+	margin-top: 32px;
+	display: flex;
+	justify-content: center;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+
+button {
+	padding: 10px 20px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 8px;
+	color: white;
+	box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+	transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+button:hover {
+	transform: translateY(-1px);
+}
+
+button:disabled {
+	background-color: #999;
+	cursor: not-allowed;
+}
+
+.loadBtn {
+	background-color: #0502b4;
+}
+
+.loadBtn:hover {
+	background-color: #3331b4;
+}
+
+.resetBtn {
+	background-color: #b40202;
+}
+
+.resetBtn:hover {
+	background-color: #d62525;
+}

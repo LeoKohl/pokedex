@@ -1,29 +1,10 @@
-const TYPE_COLORS = {
-	normal: "#A8A77A",
-	fire: "#EE8130",
-	water: "#6390F0",
-	electric: "#F7D02C",
-	grass: "#7AC74C",
-	ice: "#96D9D6",
-	fighting: "#C22E28",
-	poison: "#A33EA1",
-	ground: "#E2BF65",
-	flying: "#A98FF3",
-	psychic: "#F95587",
-	bug: "#A6B91A",
-	rock: "#B6A136",
-	ghost: "#735797",
-	dragon: "#6F35FC",
-	dark: "#705746",
-	steel: "#B7B7CE",
-	fairy: "#D685AD",
-};
 
 let pokemonArray = [];
 let loadedPokemonIds = new Set();
 let offset = 0;
 let limit = 40;
 let renderedCount = 0;
+
 
 function init() {
 	loadSavedPokemons();
@@ -32,8 +13,8 @@ function init() {
 	} else {
 		renderPokemons();
 	}
-	console.log(pokemonArray, loadedPokemonIds);
 }
+
 
 async function loadPokemon() {
 	toggleBtnLoading();
@@ -49,6 +30,7 @@ async function loadPokemon() {
 	}
 }
 
+
 async function loadPokemonData() {
 	let response = await fetchData(
 		`https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`
@@ -57,10 +39,12 @@ async function loadPokemonData() {
 	offset += limit;
 }
 
+
 async function fetchData(path = "") {
 	let response = await fetch(path);
 	return await response.json();
 }
+
 
 async function buildPokemonArray(pokemonNameArray) {
 	for (const pokemonName of pokemonNameArray) {
@@ -76,6 +60,7 @@ async function buildPokemonArray(pokemonNameArray) {
 	}
 }
 
+
 function buildPokemonData(responsePokemon) {
 	return (pokemon = {
 		id: responsePokemon.id,
@@ -85,34 +70,22 @@ function buildPokemonData(responsePokemon) {
 	});
 }
 
-function loadMore() {
-	if (renderedCount < pokemonArray.length) {
-		renderPokemons();
-	} else {
-		loadPokemon();
-	}
-}
 
 function renderPokemons() {
 	const pokemonsContainerRef = document.getElementById("pokemons");
 	const nextPokemons = pokemonArray.slice(renderedCount, renderedCount + limit);
-
 	for (const pokemon of nextPokemons) {
 		let typesHTML = pokemon.types
 			.map((type) => getPokemonTypesTemplate(type))
 			.join("");
 		let mainType = pokemon.types[0].type.name;
 		let bgColor = TYPE_COLORS[mainType] || "#777";
-		pokemonsContainerRef.innerHTML += getPokemonCardTemplate(
-			pokemon,
-			typesHTML,
-			bgColor
-		);
+		pokemonsContainerRef.innerHTML += getPokemonCardTemplate(pokemon, typesHTML, bgColor);
 	}
-
 	renderedCount += nextPokemons.length;
 	savePokemons();
 }
+
 
 function toggleBtnLoading() {
 	const btn = document.getElementById("loadMoreBtn");
@@ -121,15 +94,13 @@ function toggleBtnLoading() {
 	loading.classList.toggle("dNone");
 }
 
-function capitalizeFirstLetter(string) {
-	return string.charAt(0).toUpperCase() + string.slice(1);
-}
 
 function savePokemons() {
 	localStorage.setItem("pokemonArray", JSON.stringify(pokemonArray));
 	localStorage.setItem("loadedPokemonIds", JSON.stringify([...loadedPokemonIds]));
 	localStorage.setItem("offset", offset);
 }
+
 
 function loadSavedPokemons() {
 	const savedPokemons = JSON.parse(
@@ -142,9 +113,42 @@ function loadSavedPokemons() {
 	loadedPokemonIds = new Set(savedIds);
 }
 
-function resetPokedex() {
-	if (confirm("Are you sure you want to reset your Pokédex?")) {
-		localStorage.clear();
-		location.reload();
+
+function loadMore() {
+	if (renderedCount < pokemonArray.length) {
+		renderPokemons();
+	} else {
+		loadPokemon();
 	}
+	document.getElementById("searchInput").value = "";
+}
+
+
+function resetPokedex() {
+	localStorage.clear();
+	location.reload();
+}
+
+
+function capitalizeFirstLetter(string) {
+	return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+
+document.getElementById("searchInput").addEventListener("input", (event) => {
+	const value = event.target.value.toLowerCase();
+	let cards = document.querySelectorAll("div.pokemon-card");
+	cards.forEach(card => {
+		isVisible = checkVisibility(card, value);
+		card.classList.toggle("dNone", !isVisible);
+	});
+});
+
+
+function checkVisibility(card, value) {
+	let nameMatch = card.querySelector('[class="pokemon-name"]').textContent.toLowerCase().includes(value);
+	let idMatch = card.querySelector('[class="pokemon-id"]').textContent.toLowerCase().includes(value);
+	let typeArray = Array.from(card.querySelectorAll('[class="pokemon-type"]'));
+	let typeMatch = typeArray.some(type => type.textContent.toLowerCase().includes(value));
+	return nameMatch || idMatch || typeMatch;
 }

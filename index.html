@@ -10,7 +10,7 @@
 		<link rel="stylesheet" href="./styles/standard.css" />
 		<link rel="stylesheet" href="./styles/assets.css" />
 		<script src="./scripts/templates.js"></script>
-		<script src="./script.js"></script>
+		<script src="./scripts/db.js"></script>
 	</head>
 
 	<body onload="init()">
@@ -29,16 +29,27 @@
 			<section class="pokedex">
 				<h1>Your Pokémon</h1>
 
+				<div class="searchDiv">
+					<!-- <label for="searchInput" id="searchLabel">Search your Pokemon:</label> -->
+					<input
+						id="searchInput"
+						type="text"
+						name="search"
+						placeholder="name, id or type"
+					/>
+				</div>
+
 				<div id="pokemons"></div>
 			</section>
 			<section class="buttons">
-				<button id="loadMoreBtn" onclick="loadMore()">Load more</button>
-				<button onclick="resetPokedex()">Reset Pokédex</button>
+				<button id="loadMoreBtn" class="loadBtn" onclick="loadMore()">Load more</button>
+				<button class="resetBtn" onclick="resetPokedex()">Reset Pokédex</button>
 			</section>
 		</div>
 
 		<div id="loading" class="dNone">
 			<div class="spinner"></div>
 		</div>
+		<script src="./script.js"></script>
 	</body>
 </html>
