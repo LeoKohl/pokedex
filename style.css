@@ -1,10 +1,11 @@
 @font-face {
 	font-family: "Roboto";
-	src: url(./assets/fonts/Roboto-VariableFont_wdth\,wght.ttf);
+	src: url(./assets/fonts/Roboto-VariableFont_wdth\wght.ttf);
 }
 
 body {
 	font-family: "Roboto", sans-serif;
+	font-size: 14px;
 }
 
 .dNone {
@@ -19,9 +20,9 @@ header {
 }
 
 .headerContent {
-    height: 100%;
-    max-width: 1440px;
-    margin: 0px 32px;
+	height: 100%;
+	max-width: 1440px;
+	margin: 0px 32px;
 	display: flex;
 	justify-content: flex-start;
 	align-items: center;
@@ -29,12 +30,12 @@ header {
 
 .content {
 	display: flex;
-    flex: 1;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    margin:0 auto 56px;
-    max-width: 1440px;
+	flex: 1;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	margin: 0 auto 56px;
+	max-width: 1440px;
 	padding: 0 20px;
 }
 
@@ -97,34 +98,37 @@ h3 {
 	flex-direction: column;
 	justify-content: space-around;
 	border-radius: 8px;
-	box-shadow: 4px 4px 6px rgba(0,0,0,0.3);
+	box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.3);
 	height: 180px;
 	width: 200px;
-	text-align: center;
 	padding: 10px;
+	font-weight: bold;
+	color: white;
+	text-align: center;
 	background-color: var(--bg-color);
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+	cursor: pointer;
 }
 
-.pokemon-card .pokemon-id {
-    font-weight: bold;
-    font-size: 14px;
-    color: white;
+.pokemon-card:hover {
+	transform: scale(1.05);
+	box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.35);
 }
 
 .pokemon-types {
-    display: flex;
+	display: flex;
 	flex-direction: column;
-    justify-content: center;
-    gap: 4px;
+	justify-content: center;
+	gap: 4px;
 }
 
 .pokemon-type {
-    font-size: 14px;
-    color: white;
-    background-color: rgba(224, 215, 215, 0.26);
-	box-shadow: 4px 4px 6px rgba(0,0,0,0.3);
-    padding: 2px 6px;
-    border-radius: 10px;
+	font-size: 14px;
+	color: white;
+	background-color: rgba(224, 215, 215, 0.26);
+	box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.3);
+	padding: 2px 6px;
+	border-radius: 10px;
 }
 
 .name-id {
@@ -139,9 +143,9 @@ h3 {
 }
 
 .logo {
-    height: 54px;
-    width: 54px;
-    margin-right: 24px;
+	height: 54px;
+	width: 54px;
+	margin-right: 24px;
 }
 
 .pokemon-card img {
