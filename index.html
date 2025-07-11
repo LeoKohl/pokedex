@@ -9,6 +9,7 @@
 		<link rel="stylesheet" href="./style.css" />
 		<link rel="stylesheet" href="./styles/standard.css" />
 		<link rel="stylesheet" href="./styles/assets.css" />
+		<link rel="stylesheet" href="./styles/overlay.css">
 		<script src="./scripts/templates.js"></script>
 		<script src="./scripts/db.js"></script>
 	</head>
@@ -43,9 +44,15 @@
 			</section>
 			<section class="buttons">
 				<button id="loadMoreBtn" class="loadBtn" onclick="loadMore()">Load more</button>
-				<button class="resetBtn" onclick="resetPokedex()">Reset Pokédex</button>
+				<button id="resetBtn" class="resetBtn" onclick="resetPokedex()">Reset Pokédex</button>
 			</section>
 		</div>
+
+		<section id="overlay" class="overlay dNone" onclick="closeOverlay()">
+			<div id="pokemonOverlay" class="pokemonOverlay" onclick="preventBubbling(event)">
+
+			</div>
+		</section>
 
 		<div id="loading" class="dNone">
 			<div class="spinner"></div>

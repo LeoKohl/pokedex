@@ -1,6 +1,6 @@
 function getPokemonCardTemplate(pokemon, typesHTML, bgColor) {
 	return /* HTML */ `
-		<div class="pokemon-card" style="--bg-color: ${bgColor}">
+		<div class="pokemon-card" onclick="openOverlay()" style="--bg-color: ${bgColor}">
 			<div class="name-id">
 				<h3 class="pokemon-name">${capitalizeFirstLetter(pokemon.name)}</h3>
 				<span class="pokemon-id">#${pokemon.id}</span>
