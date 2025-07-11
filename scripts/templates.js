@@ -2,7 +2,7 @@ function getPokemonCardTemplate(pokemon, typesHTML, bgColor) {
 	return /* HTML */ `
 		<div class="pokemon-card" onclick="openOverlay()" style="--bg-color: ${bgColor}">
 			<div class="name-id">
-				<h3 class="pokemon-name">${capitalizeFirstLetter(pokemon.name)}</h3>
+				<h4 class="pokemon-name">${capitalizeFirstLetter(pokemon.name)}</h4>
 				<span class="pokemon-id">#${pokemon.id}</span>
 			</div>
 			<div class="types-img">
@@ -13,6 +13,12 @@ function getPokemonCardTemplate(pokemon, typesHTML, bgColor) {
 	`;
 }
 
+
 function getPokemonTypesTemplate(type) {
 	return /* HMTL */ `<p class="pokemon-type">${capitalizeFirstLetter(type.type.name)}</p>`;
+}
+
+
+function getMessageTemplate(message) {
+	return /* HMTL */ `<h3>${message}<h3>`;
 }

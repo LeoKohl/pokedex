@@ -75,17 +75,28 @@ async function buildPokemonArray(pokemonNameArray) {
 
 
 function buildPokemonData(responsePokemon) {
+	let stats = calculateAppendTotalStat(responsePokemon.stats);
 	let pokemon = {
 		id: responsePokemon.id,
 		name: responsePokemon.name,
 		types: responsePokemon.types,
 		image: responsePokemon.sprites.other["official-artwork"].front_default,
 		abilities: responsePokemon.abilities,
-		stats: responsePokemon.stats,
+		stats: stats,
 		height: correctUnit(responsePokemon.height),
 		weight: correctUnit(responsePokemon.weight),
 	};
 	return pokemon;
+}
+
+
+function calculateAppendTotalStat(stats) {
+	let total = stats.reduce((sum, stat) => sum + stat.base_stat, 0);
+	stats.push({
+		base_stat: total,
+		stat: { name: "total" },
+	});
+	return stats;
 }
 
 
@@ -112,12 +123,9 @@ function savePokemons() {
 
 
 function loadSavedPokemons() {
-	const savedPokemons = JSON.parse(
-		localStorage.getItem("pokemonArray") || "[]"
-	);
+	const savedPokemons = JSON.parse(localStorage.getItem("pokemonArray") || "[]");
 	const savedIds = JSON.parse(localStorage.getItem("loadedPokemonIds") || "[]");
 	offset = parseInt(localStorage.getItem("offset") || "0", 10);
-
 	pokemonArray = savedPokemons;
 	loadedPokemonIds = new Set(savedIds);
 }
@@ -150,8 +158,20 @@ function handleSearch(event) {
 			types.some(type => type.includes(value))
 		);
 	});
-	renderPokemonCards();
+	if (currentPokemon.length == 0) {
+		searchNotFoundMessage();
+	} else {
+		renderPokemonCards();
+	}
 };
+
+
+function searchNotFoundMessage() {
+	const pokemonsContainerRef = document.getElementById("pokemons");
+	pokemonsContainerRef.innerHTML = '';
+	let message = "Sorry. No Pokémon found!";
+	pokemonsContainerRef.innerHTML = getMessageTemplate(message);
+}
 
 
 //overlay large pokemon card
