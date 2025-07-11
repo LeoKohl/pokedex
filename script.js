@@ -9,39 +9,43 @@ let renderedCount = 0;
 
 
 //core load functions
-function init() {
+async function init() {
+	toggleBtnLoading();
 	loadSavedPokemons();
 	if (pokemonArray.length === 0) {
-		loadPokemon();
-	} else {
-		renderPokemons();
+		await loadPokemon();
 	}
-	console.log(pokemonArray);
+	updateAndRenderCurrentPokemon();
+	toggleBtnLoading();
 }
 
 
-function loadMore() {
+async function loadMore() {
+	toggleBtnLoading();
 	document.getElementById("searchInput").value = "";
-	if (renderedCount < pokemonArray.length) {
-		renderPokemons();
-	} else {
-		loadPokemon();
+	if (renderedCount >= pokemonArray.length) {
+		await loadPokemon();
 	}
+	updateAndRenderCurrentPokemon();
+	toggleBtnLoading();
 }
 
 
 async function loadPokemon() {
-	toggleBtnLoading();
 	try {
 		await loadPokemonData();
-		renderPokemons();
 		savePokemons();
 	} catch (error) {
 		console.error("Failed to load Pokémon:", error);
 		alert("Something went wrong. Please try again later.");
-	} finally {
-		toggleBtnLoading();
 	}
+}
+
+
+function updateAndRenderCurrentPokemon(limitOverride = limit) {
+	renderedCount = Math.min(renderedCount + limitOverride, pokemonArray.length);
+	currentPokemon = pokemonArray.slice(0, renderedCount);
+	renderPokemonCards();
 }
 
 
@@ -86,18 +90,16 @@ function buildPokemonData(responsePokemon) {
 
 
 //render small pokemon cards 
-function renderPokemons() {
+function renderPokemonCards() {
 	const pokemonsContainerRef = document.getElementById("pokemons");
-	const nextPokemons = pokemonArray.slice(renderedCount, renderedCount + limit);
-	for (const pokemon of nextPokemons) {
+	pokemonsContainerRef.innerHTML = '';
+	for (const pokemon of currentPokemon) {
 		let typesHTML = pokemon.types
 			.map((type) => getPokemonTypesTemplate(type))
 			.join("");
 		let bgColor = TYPE_COLORS[pokemon.types[0].type.name] || "#777";
 		pokemonsContainerRef.innerHTML += getPokemonCardTemplate(pokemon, typesHTML, bgColor);
 	}
-	renderedCount += nextPokemons.length;
-	savePokemons();
 }
 
 
@@ -128,23 +130,28 @@ function resetPokedex() {
 
 
 //search function
-document.getElementById("searchInput").addEventListener("input", (event) => {
+document.getElementById("searchInput").addEventListener("input", debounce(handleSearch, 250));
+
+
+function handleSearch(event) {
 	const value = event.target.value.toLowerCase();
-	let cards = document.querySelectorAll("div.pokemon-card");
-	cards.forEach(card => {
-		isVisible = checkVisibility(card, value);
-		card.classList.toggle("dNone", !isVisible);
+	currentPokemon = pokemonArray.slice(0, renderedCount);
+	if (value === "") {
+		renderPokemonCards();
+		return;
+	}
+	currentPokemon = currentPokemon.filter(pokemon => {
+		const name = pokemon.name.toLowerCase();
+		const id = String(pokemon.id);
+		const types = pokemon.types.map(t => t.type.name.toLowerCase());
+		return (
+			name.includes(value) ||
+			id.includes(value) ||
+			types.some(type => type.includes(value))
+		);
 	});
-});
-
-
-function checkVisibility(card, value) {
-	let nameMatch = card.querySelector('[class="pokemon-name"]').textContent.toLowerCase().includes(value);
-	let idMatch = card.querySelector('[class="pokemon-id"]').textContent.toLowerCase().includes(value);
-	let typeArray = Array.from(card.querySelectorAll('[class="pokemon-type"]'));
-	let typeMatch = typeArray.some(type => type.textContent.toLowerCase().includes(value));
-	return nameMatch || idMatch || typeMatch;
-}
+	renderPokemonCards();
+};
 
 
 //overlay large pokemon card
@@ -187,4 +194,12 @@ function toggleBtnLoading() {
 async function fetchData(path = "") {
 	let response = await fetch(path);
 	return await response.json();
+}
+
+function debounce(cb, delay) {
+	let timeout;
+	return (...args) => {
+		clearTimeout(timeout);
+		timeout = setTimeout(() => cb(...args), delay);
+	};
 }
