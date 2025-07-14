@@ -58,18 +58,18 @@ button:disabled {
 	cursor: not-allowed;
 }
 
-.loadBtn {
+.load-more-btn {
 	background-color: #0502b4;
 }
 
-.loadBtn:hover {
+.load-more-btn:hover {
 	background-color: #3331b4;
 }
 
-.resetBtn {
+.reset-btn {
 	background-color: #b40202;
 }
 
-.resetBtn:hover {
+.reset-btn:hover {
 	background-color: #d62525;
 }

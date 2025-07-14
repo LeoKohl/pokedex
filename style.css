@@ -8,10 +8,6 @@ body {
 	font-size: 14px;
 }
 
-.dNone {
-	display: none !important;
-}
-
 header {
 	height: 86px;
 	background-color: #b5b5b5b6;
@@ -19,7 +15,7 @@ header {
 	box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.4);
 }
 
-.headerContent {
+.header-content {
 	height: 100%;
 	max-width: 1440px;
 	margin: 0px 32px;
@@ -56,18 +52,19 @@ h4 {
 	font-size: 16px;
 }
 
-.searchDiv {
+.search-div {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 }
 
-#searchLabel {
-	font-size: 18px;
+.search-label {
+	font-size: 22px;
 	font-weight: bold;
+	margin-bottom: 12px;
 }
 
-#searchInput {
+#search-input {
 	height: 36px;
 	width: 260px;
 	padding: 0 10px;
@@ -80,12 +77,12 @@ h4 {
 	background-color: white;
 }
 
-#searchInput:focus {
+#search-input:focus {
 	border-color: #0502b4;
 	box-shadow: 0 0 0 2px rgba(5, 2, 180, 0.2);
 }
 
-#searchInput::placeholder {
+#search-input::placeholder {
 	color: grey;
 }
 

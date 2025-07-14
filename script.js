@@ -22,7 +22,7 @@ async function init() {
 
 async function loadMore() {
 	toggleBtnLoading();
-	document.getElementById("searchInput").value = "";
+	document.getElementById("search-input").value = "";
 	if (renderedCount >= pokemonArray.length) {
 		await loadPokemon();
 	}
@@ -104,13 +104,11 @@ function calculateAppendTotalStat(stats) {
 function renderPokemonCards() {
 	const pokemonsContainerRef = document.getElementById("pokemons");
 	pokemonsContainerRef.innerHTML = '';
-	for (const pokemon of currentPokemon) {
-		let typesHTML = pokemon.types
-			.map((type) => getPokemonTypesTemplate(type))
-			.join("");
-		let bgColor = TYPE_COLORS[pokemon.types[0].type.name] || "#777";
-		pokemonsContainerRef.innerHTML += getPokemonCardTemplate(pokemon, typesHTML, bgColor);
-	}
+	currentPokemon.forEach((pokemon, index) => {
+    const typesHTML = pokemon.types.map(type => getPokemonTypesTemplate(type)).join("");
+    const bgColor = TYPE_COLORS[pokemon.types[0].type.name] || "#777";
+    pokemonsContainerRef.innerHTML += getPokemonCardTemplate(pokemon, typesHTML, bgColor, index);
+  });
 }
 
 
@@ -138,7 +136,7 @@ function resetPokedex() {
 
 
 //search function
-document.getElementById("searchInput").addEventListener("input", debounce(handleSearch, 250));
+document.getElementById("search-input").addEventListener("input", debounce(handleSearch, 250));
 
 
 function handleSearch(event) {
@@ -175,18 +173,57 @@ function searchNotFoundMessage() {
 
 
 //overlay large pokemon card
-function openOverlay() {
-	document.getElementById('overlay').classList.remove('dNone');
+function openOverlay(index) {
+  selectedPokemonIndex = index;
+  renderOverlayPokemon(currentPokemon[selectedPokemonIndex]);
+  document.getElementById('overlay').classList.remove('d-none');
 }
-
 
 function closeOverlay() {
-	document.getElementById('overlay').classList.add('dNone');
+  document.getElementById('overlay').classList.add('d-none');
 }
 
-
 function preventBubbling(event) {
-	event.stopPropagation();
+  event.stopPropagation();
+}
+
+function showNextPokemon() {
+  selectedPokemonIndex = (selectedPokemonIndex + 1) % currentPokemon.length;
+  renderOverlayPokemon(currentPokemon[selectedPokemonIndex]);
+}
+
+function showPreviousPokemon() {
+  selectedPokemonIndex = (selectedPokemonIndex - 1 + currentPokemon.length) % currentPokemon.length;
+  renderOverlayPokemon(currentPokemon[selectedPokemonIndex]);
+}
+
+function changePokemon(indexModifier) {
+	selectedPokemonIndex += indexModifier;
+	if (selectedPokemonIndex < 0) {
+        selectedPokemonIndex = currentPokemon.length - 1;
+    } 
+    if (selectedPokemonIndex > currentPokemon.length - 1) {
+        selectedPokemonIndex = 0;
+    }
+	renderOverlayPokemon(currentPokemon[selectedPokemonIndex]);
+}
+
+function renderOverlayPokemon(pokemon) {
+  const typesHTML = pokemon.types.map(t => getPokemonTypesTemplate(t)).join("");
+  document.getElementById("pokemon-overlay").innerHTML = getOverlayPokemonTemplate(pokemon, typesHTML)
+  toggleOverlaySection("about");
+}
+
+function toggleOverlaySection(section) {
+  let pokemon = currentPokemon[selectedPokemonIndex];
+  let abilities = pokemon.abilities.map(a => capitalizeFirstLetter(a.ability.name)).join(", ");
+  let overlayContentRef = document.getElementById("overlay-content");
+  if (section === 'about') {
+	overlayContentRef.innerHTML = getOverlayAboutTemplate(pokemon, abilities);
+  } else if (section === 'stats') {
+	let statsHTML = pokemon.stats.map(stat => getOverlayStatsTemplate(stat)).join("");
+	overlayContentRef.innerHTML = statsHTML;
+  }
 }
 
 
@@ -202,12 +239,12 @@ function correctUnit(unit) {
 
 
 function toggleBtnLoading() {
-	const loadbtn = document.getElementById("loadMoreBtn");
-	const resetbtn = document.getElementById("resetBtn");
+	const loadbtn = document.getElementById("load-more-btn");
+	const resetbtn = document.getElementById("reset-btn");
 	const loading = document.getElementById("loading");
 	loadbtn.disabled = !loadbtn.disabled;
 	resetbtn.disabled = !resetbtn.disabled;
-	loading.classList.toggle("dNone");
+	loading.classList.toggle("d-none");
 }
 
 

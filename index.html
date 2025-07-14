@@ -16,7 +16,7 @@
 
 	<body onload="init()">
 		<header>
-			<div class="headerContent">
+			<div class="header-content">
 				<img
 					class="logo"
 					src="./assets/icons/pokeball_icon.png"
@@ -30,10 +30,10 @@
 			<section class="pokedex">
 				<h1>Your Pokémon</h1>
 
-				<div class="searchDiv">
-					<!-- <label for="searchInput" id="searchLabel">Search your Pokemon:</label> -->
+				<div class="search-div">
+					<label for="search-input" class="search-label">Search your Pokémon</label>
 					<input
-						id="searchInput"
+						id="search-input"
 						type="text"
 						name="search"
 						placeholder="name, id or type"
@@ -43,18 +43,18 @@
 				<div id="pokemons"></div>
 			</section>
 			<section class="buttons">
-				<button id="loadMoreBtn" class="loadBtn" onclick="loadMore()">Load more</button>
-				<button id="resetBtn" class="resetBtn" onclick="resetPokedex()">Reset Pokédex</button>
+				<button id="load-more-btn" class="load-more-btn" onclick="loadMore()">Load more</button>
+				<button id="reset-btn" class="reset-btn" onclick="resetPokedex()">Reset Pokédex</button>
 			</section>
 		</div>
 
-		<section id="overlay" class="overlay dNone" onclick="closeOverlay()">
-			<div id="pokemonOverlay" class="pokemonOverlay" onclick="preventBubbling(event)">
+		<section id="overlay" class="overlay d-none" onclick="closeOverlay()">
+			<div id="pokemon-overlay" class="pokemon-overlay" onclick="preventBubbling(event)">
 
 			</div>
 		</section>
 
-		<div id="loading" class="dNone">
+		<div id="loading" class="d-none">
 			<div class="spinner"></div>
 		</div>
 		<script src="./script.js"></script>
