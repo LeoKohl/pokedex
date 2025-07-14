@@ -32,7 +32,12 @@ function getMessageTemplate(message) {
 function getOverlayPokemonTemplate(pokemon, typesHTML, bgColor) {
   return `
     <div class="pokemon-overlay-content" style="--bg-color: ${bgColor}">
-      <div class="overlay-top" >
+      <div class="overlay-top">
+        <div class="overlay-close-icon-container">
+          <a onclick="closeOverlay()">
+            <img class="overlay-close-icon" src="./assets/icons/close-icon.png" alt="Close" />
+          </a>
+        </div>
         <div class="top-header">
           <span class="name">${capitalizeFirstLetter(pokemon.name)}</span>
           <span class="id">#${pokemon.id}</span>
@@ -94,49 +99,49 @@ function getOverlayStatsTemplate(stats) {
       <td>${capitalizeFirstLetter(stats[0].stat.name)}</td>
       <td>${stats[0].base_stat}</td>
       <td>
-        <progress value="${stats[0].base_stat}" max="255"></progress>
+        <progress class="stat-green" value="${stats[0].base_stat}" max="255"></progress>
       </td>
     </tr>
     <tr>
       <td>${capitalizeFirstLetter(stats[1].stat.name)}</td>
       <td>${stats[1].base_stat}</td>
       <td>
-        <progress value="${stats[1].base_stat}" max="180"></progress>
+        <progress class="stat-red" value="${stats[1].base_stat}" max="180"></progress>
       </td>
     </tr>
     <tr>
       <td>${capitalizeFirstLetter(stats[2].stat.name)}</td>
       <td>${stats[2].base_stat}</td>
       <td>
-        <progress value="${stats[2].base_stat}" max="230"></progress>
+        <progress class="stat-blue" value="${stats[2].base_stat}" max="230"></progress>
       </td>
     </tr>
     <tr>
       <td>${capitalizeFirstLetter(stats[3].stat.name)}</td>
       <td>${stats[3].base_stat}</td>
       <td>
-        <progress value="${stats[3].base_stat}" max="200"></progress>
+        <progress class="stat-red" value="${stats[3].base_stat}" max="200"></progress>
       </td>
     </tr>
     <tr>
       <td>${capitalizeFirstLetter(stats[4].stat.name)}</td>
       <td>${stats[4].base_stat}</td>
       <td>
-        <progress value="${stats[4].base_stat}" max="230"></progress>
+        <progress class="stat-blue" value="${stats[4].base_stat}" max="230"></progress>
       </td>
     </tr>
     <tr>
       <td>${capitalizeFirstLetter(stats[5].stat.name)}</td>
       <td>${stats[5].base_stat}</td>
       <td>
-        <progress value="${stats[5].base_stat}" max="200"></progress>
+        <progress class="stat-green" value="${stats[5].base_stat}" max="200"></progress>
       </td>
     </tr>
     <tr>
       <td>${capitalizeFirstLetter(stats[6].stat.name)}</td>
       <td>${stats[6].base_stat}</td>
       <td>
-        <progress value="${stats[6].base_stat}" max="720"></progress>
+        <progress class="stat-green" value="${stats[6].base_stat}" max="720"></progress>
       </td>
     </tr>
   `;
