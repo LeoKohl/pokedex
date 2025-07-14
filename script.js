@@ -75,7 +75,7 @@ async function buildPokemonArray(pokemonNameArray) {
 
 
 function buildPokemonData(responsePokemon) {
-	let stats = calculateAppendTotalStat(responsePokemon.stats);
+	let stats = correctAndCompleteStats(responsePokemon.stats);
 	let pokemon = {
 		id: responsePokemon.id,
 		name: responsePokemon.name,
@@ -90,12 +90,15 @@ function buildPokemonData(responsePokemon) {
 }
 
 
-function calculateAppendTotalStat(stats) {
+function correctAndCompleteStats(stats) {
 	let total = stats.reduce((sum, stat) => sum + stat.base_stat, 0);
 	stats.push({
 		base_stat: total,
-		stat: { name: "total" },
+		stat: { name: "total"},
 	});
+	stats[0].stat.name = "HP";
+	stats[3].stat.name = "Sp. Atk.";
+	stats[4].stat.name = "Sp. Def.";
 	return stats;
 }
 
@@ -105,10 +108,10 @@ function renderPokemonCards() {
 	const pokemonsContainerRef = document.getElementById("pokemons");
 	pokemonsContainerRef.innerHTML = '';
 	currentPokemon.forEach((pokemon, index) => {
-    const typesHTML = pokemon.types.map(type => getPokemonTypesTemplate(type)).join("");
-    const bgColor = TYPE_COLORS[pokemon.types[0].type.name] || "#777";
-    pokemonsContainerRef.innerHTML += getPokemonCardTemplate(pokemon, typesHTML, bgColor, index);
-  });
+		const typesHTML = pokemon.types.map(type => getPokemonTypesTemplate(type)).join("");
+		const bgColor = TYPE_COLORS[pokemon.types[0].type.name] || "#777";
+		pokemonsContainerRef.innerHTML += getPokemonCardTemplate(pokemon, typesHTML, bgColor, index);
+	});
 }
 
 
@@ -174,56 +177,58 @@ function searchNotFoundMessage() {
 
 //overlay large pokemon card
 function openOverlay(index) {
-  selectedPokemonIndex = index;
-  renderOverlayPokemon(currentPokemon[selectedPokemonIndex]);
-  document.getElementById('overlay').classList.remove('d-none');
+	selectedPokemonIndex = index;
+	renderOverlayPokemon(currentPokemon[selectedPokemonIndex]);
+	document.getElementById('overlay').classList.remove('d-none');
 }
 
 function closeOverlay() {
-  document.getElementById('overlay').classList.add('d-none');
+	document.getElementById('overlay').classList.add('d-none');
 }
 
 function preventBubbling(event) {
-  event.stopPropagation();
+	event.stopPropagation();
 }
 
 function showNextPokemon() {
-  selectedPokemonIndex = (selectedPokemonIndex + 1) % currentPokemon.length;
-  renderOverlayPokemon(currentPokemon[selectedPokemonIndex]);
+	selectedPokemonIndex = (selectedPokemonIndex + 1) % currentPokemon.length;
+	renderOverlayPokemon(currentPokemon[selectedPokemonIndex]);
 }
 
 function showPreviousPokemon() {
-  selectedPokemonIndex = (selectedPokemonIndex - 1 + currentPokemon.length) % currentPokemon.length;
-  renderOverlayPokemon(currentPokemon[selectedPokemonIndex]);
+	selectedPokemonIndex = (selectedPokemonIndex - 1 + currentPokemon.length) % currentPokemon.length;
+	renderOverlayPokemon(currentPokemon[selectedPokemonIndex]);
 }
 
 function changePokemon(indexModifier) {
 	selectedPokemonIndex += indexModifier;
 	if (selectedPokemonIndex < 0) {
-        selectedPokemonIndex = currentPokemon.length - 1;
-    } 
-    if (selectedPokemonIndex > currentPokemon.length - 1) {
-        selectedPokemonIndex = 0;
-    }
+		selectedPokemonIndex = currentPokemon.length - 1;
+	}
+	if (selectedPokemonIndex > currentPokemon.length - 1) {
+		selectedPokemonIndex = 0;
+	}
 	renderOverlayPokemon(currentPokemon[selectedPokemonIndex]);
 }
 
 function renderOverlayPokemon(pokemon) {
-  const typesHTML = pokemon.types.map(t => getPokemonTypesTemplate(t)).join("");
-  document.getElementById("pokemon-overlay").innerHTML = getOverlayPokemonTemplate(pokemon, typesHTML)
-  toggleOverlaySection("about");
+	const typesHTML = pokemon.types.map(t => getPokemonTypesTemplate(t)).join("");
+	const bgColor = TYPE_COLORS[pokemon.types[0].type.name] || "#777";
+	document.getElementById("pokemon-overlay").innerHTML = getOverlayPokemonTemplate(pokemon, typesHTML, bgColor);
+	toggleOverlaySection("about");
 }
 
 function toggleOverlaySection(section) {
-  let pokemon = currentPokemon[selectedPokemonIndex];
-  let abilities = pokemon.abilities.map(a => capitalizeFirstLetter(a.ability.name)).join(", ");
-  let overlayContentRef = document.getElementById("overlay-content");
-  if (section === 'about') {
-	overlayContentRef.innerHTML = getOverlayAboutTemplate(pokemon, abilities);
-  } else if (section === 'stats') {
-	let statsHTML = pokemon.stats.map(stat => getOverlayStatsTemplate(stat)).join("");
-	overlayContentRef.innerHTML = statsHTML;
-  }
+	let pokemon = currentPokemon[selectedPokemonIndex];
+	let abilities = pokemon.abilities.map(a => capitalizeFirstLetter(a.ability.name)).join(", ");
+	let overlayContentTableRef = document.getElementById("overlay-bottom-content-table");
+	toggleOverlayMenuButtonActive(section);
+	if (section === 'about') {
+		overlayContentTableRef.innerHTML = getOverlayAboutTemplate(pokemon, abilities);
+	} else if (section === 'stats') {
+		let statsHTML = getOverlayStatsTemplate(pokemon.stats);
+		overlayContentTableRef.innerHTML = statsHTML;
+	}
 }
 
 
@@ -259,4 +264,12 @@ function debounce(cb, delay) {
 		clearTimeout(timeout);
 		timeout = setTimeout(() => cb(...args), delay);
 	};
+}
+
+
+function toggleOverlayMenuButtonActive(section) {
+	document.querySelectorAll('.overlay-menu button').forEach(btn => {
+		btn.classList.toggle('active', btn.textContent.toLowerCase().includes(section));
+	});
+
 }

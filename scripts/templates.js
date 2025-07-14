@@ -1,7 +1,6 @@
 
-
 function getPokemonCardTemplate(pokemon, typesHTML, bgColor, index) {
-	return /* HTML */ `
+  return /* HTML */ `
 		<div
 			class="pokemon-card"
 			onclick="openOverlay(${index})"
@@ -21,52 +20,120 @@ function getPokemonCardTemplate(pokemon, typesHTML, bgColor, index) {
 
 
 function getPokemonTypesTemplate(type) {
-	return /* HMTL */ `<p class="pokemon-type">${capitalizeFirstLetter(type.type.name)}</p>`;
+  return /* HMTL */ `<p class="pokemon-type">${capitalizeFirstLetter(type.type.name)}</p>`;
 }
 
 
 function getMessageTemplate(message) {
-	return /* HMTL */ `<h3>${message}<h3>`;
+  return /* HMTL */ `<h3>${message}<h3>`;
 }
 
 
-function getOverlayPokemonTemplate(pokemon, typesHTML) {
-	return `
-    <div class="overlay-top">
-      <div class="top-header">
-        <span class="name">${capitalizeFirstLetter(pokemon.name)}</span>
-        <span class="id">#${pokemon.id}</span>
+function getOverlayPokemonTemplate(pokemon, typesHTML, bgColor) {
+  return `
+    <div class="pokemon-overlay-content" style="--bg-color: ${bgColor}">
+      <div class="overlay-top" >
+        <div class="top-header">
+          <span class="name">${capitalizeFirstLetter(pokemon.name)}</span>
+          <span class="id">#${pokemon.id}</span>
+        </div>
+        <div class="top-content">
+          <div class="types">${typesHTML}</div>
+          <div class="image"><img src="${pokemon.image}" alt="${pokemon.name}" /></div>
+        </div>
       </div>
-      <div class="top-content">
-        <div class="types">${typesHTML}</div>
-        <div class="image"><img src="${pokemon.image}" alt="${pokemon.name}" /></div>
+      <div class="overlay-menu">
+        <div class="overlay-menu-buttons">
+          <button onclick="toggleOverlaySection('about')">About</button>
+          <button onclick="toggleOverlaySection('stats')">Base Stats</button>
+        </div>
       </div>
-    </div>
-    <div class="overlay-menu">
-      <button onclick="toggleOverlaySection('about')">About</button>
-      <button onclick="toggleOverlaySection('stats')">Base Stats</button>
-    </div>
-    <div id="overlay-content" class="overlay-bottom">
-      <!-- dynamic section -->
-    </div>
-    <div class="overlay-nav">
-      <button onclick="changePokemon(-1)">Previous</button>
-      <button onclick="changePokemon(1)">Next</button>
+      <div class="overlay-bottom">
+        <div id="overlay-bottom-content" class="overlay-bottom-content">
+          <table id="overlay-bottom-content-table"></table>
+        </div>
+        <div class="overlay-bottom-nav">
+          <button onclick="changePokemon(-1)">Previous</button>
+          <button onclick="changePokemon(1)">Next</button>
+        </div>
+      </div>
     </div>
   `;
 }
 
 
 function getOverlayAboutTemplate(pokemon, abilities) {
-	return /* HMTL */ `
-      <div><strong>Name:</strong> ${capitalizeFirstLetter(pokemon.name)}</div>
-      <div><strong>Weight:</strong> ${pokemon.weight} kg</div>
-      <div><strong>Height:</strong> ${pokemon.height} m</div>
-      <div><strong>Abilities:</strong> ${abilities}</div>
+  return /* HMTL */ `
+      <tr>
+        <td><strong>Species</strong></td>
+        <td>${capitalizeFirstLetter(pokemon.name)}</td>
+      </tr>
+      <tr>
+        <td><strong>Weight</strong></td>
+        <td>${pokemon.weight} kg</td>
+      </tr>
+      <tr>
+        <td><strong>Height</strong></td>
+        <td>${pokemon.height} m</td>
+      </tr>
+      <tr>
+        <td><strong>Abilities</strong></td>
+        <td>${abilities}</td>
+      </tr>
     `;
 }
 
 
-function getOverlayStatsTemplate(stat) {
-	return `<div><strong>${capitalizeFirstLetter(stat.stat.name)}:</strong> ${stat.base_stat}</div>`
+function getOverlayStatsTemplate(stats) {
+  return `
+    <tr>
+      <td>${capitalizeFirstLetter(stats[0].stat.name)}</td>
+      <td>${stats[0].base_stat}</td>
+      <td>
+        <progress value="${stats[0].base_stat}" max="255"></progress>
+      </td>
+    </tr>
+    <tr>
+      <td>${capitalizeFirstLetter(stats[1].stat.name)}</td>
+      <td>${stats[1].base_stat}</td>
+      <td>
+        <progress value="${stats[1].base_stat}" max="180"></progress>
+      </td>
+    </tr>
+    <tr>
+      <td>${capitalizeFirstLetter(stats[2].stat.name)}</td>
+      <td>${stats[2].base_stat}</td>
+      <td>
+        <progress value="${stats[2].base_stat}" max="230"></progress>
+      </td>
+    </tr>
+    <tr>
+      <td>${capitalizeFirstLetter(stats[3].stat.name)}</td>
+      <td>${stats[3].base_stat}</td>
+      <td>
+        <progress value="${stats[3].base_stat}" max="200"></progress>
+      </td>
+    </tr>
+    <tr>
+      <td>${capitalizeFirstLetter(stats[4].stat.name)}</td>
+      <td>${stats[4].base_stat}</td>
+      <td>
+        <progress value="${stats[4].base_stat}" max="230"></progress>
+      </td>
+    </tr>
+    <tr>
+      <td>${capitalizeFirstLetter(stats[5].stat.name)}</td>
+      <td>${stats[5].base_stat}</td>
+      <td>
+        <progress value="${stats[5].base_stat}" max="200"></progress>
+      </td>
+    </tr>
+    <tr>
+      <td>${capitalizeFirstLetter(stats[6].stat.name)}</td>
+      <td>${stats[6].base_stat}</td>
+      <td>
+        <progress value="${stats[6].base_stat}" max="720"></progress>
+      </td>
+    </tr>
+  `;
 }

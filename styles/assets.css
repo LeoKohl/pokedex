@@ -73,3 +73,27 @@ button:disabled {
 .reset-btn:hover {
 	background-color: #d62525;
 }
+
+progress {
+	appearance: none;
+	vertical-align: middle;
+	width: min(40vw, 180px);
+	height: 8px;
+	background-color: #eee;
+	border-radius: 6px;
+}
+
+progress::-webkit-progress-bar {
+	background-color: #eee;
+	border-radius: 6px;
+}
+
+progress::-webkit-progress-value {
+	background-color: #ff6265;
+	border-radius: 6px;
+}
+
+progress::-moz-progress-bar {
+	background-color: #ff6265;
+	border-radius: 6px;
+}
