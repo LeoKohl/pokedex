@@ -22,3 +22,7 @@ button {
 .d-none {
     display: none !important;
 }
+
+.overflow-y-hidden {
+    overflow-y: hidden;
+}

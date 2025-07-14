@@ -53,8 +53,12 @@ function getOverlayPokemonTemplate(pokemon, typesHTML, bgColor) {
           <table id="overlay-bottom-content-table"></table>
         </div>
         <div class="overlay-bottom-nav">
-          <button onclick="changePokemon(-1)">Previous</button>
-          <button onclick="changePokemon(1)">Next</button>
+          <a onclick="changePokemon(-1)">
+            <img class="nav-icon" src="./assets/icons/left-arrow.png" alt="Previous" />
+          </a>
+          <a onclick="changePokemon(1)">
+            <img class="nav-icon" src="./assets/icons/right-arrow.png" alt="Next" />
+          </a>
         </div>
       </div>
     </div>

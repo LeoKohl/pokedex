@@ -180,10 +180,12 @@ function openOverlay(index) {
 	selectedPokemonIndex = index;
 	renderOverlayPokemon(currentPokemon[selectedPokemonIndex]);
 	document.getElementById('overlay').classList.remove('d-none');
+	document.body.classList.add('overflow-y-hidden');
 }
 
 function closeOverlay() {
 	document.getElementById('overlay').classList.add('d-none');
+	document.body.classList.remove('overflow-y-hidden');
 }
 
 function preventBubbling(event) {
@@ -230,6 +232,28 @@ function toggleOverlaySection(section) {
 		overlayContentTableRef.innerHTML = statsHTML;
 	}
 }
+
+
+document.addEventListener("keydown", function (event) {
+	if (event.key === "Escape") {
+		closeOverlay();
+	}
+});
+
+
+document.addEventListener('keydown', (event) => {
+  const overlayRef = document.getElementById('overlay');
+  if (overlayRef.classList.contains('d-none')) return;
+
+  switch (event.key) {
+    case 'ArrowRight':
+      changePokemon(1);
+      break;
+    case 'ArrowLeft':
+      changePokemon(-1);
+      break;
+  }
+});
 
 
 //utility functions
