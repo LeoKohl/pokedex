@@ -149,7 +149,17 @@ function handleSearch(event) {
 		renderPokemonCards();
 		return;
 	}
-	currentPokemon = currentPokemon.filter(pokemon => {
+	currentPokemon = filterPokemon(value);
+	if (currentPokemon.length == 0) {
+		searchNotFoundMessage();
+	} else {
+		renderPokemonCards();
+	}
+}
+
+
+function filterPokemon(value) {
+	let filteredPokemon = currentPokemon.filter(pokemon => {
 		const name = pokemon.name.toLowerCase();
 		const id = String(pokemon.id);
 		const types = pokemon.types.map(t => t.type.name.toLowerCase());
@@ -159,12 +169,8 @@ function handleSearch(event) {
 			types.some(type => type.includes(value))
 		);
 	});
-	if (currentPokemon.length == 0) {
-		searchNotFoundMessage();
-	} else {
-		renderPokemonCards();
-	}
-};
+	return filteredPokemon;
+}
 
 
 function searchNotFoundMessage() {
@@ -183,24 +189,29 @@ function openOverlay(index) {
 	document.body.classList.add('overflow-y-hidden');
 }
 
+
 function closeOverlay() {
 	document.getElementById('overlay').classList.add('d-none');
 	document.body.classList.remove('overflow-y-hidden');
 }
 
+
 function preventBubbling(event) {
 	event.stopPropagation();
 }
+
 
 function showNextPokemon() {
 	selectedPokemonIndex = (selectedPokemonIndex + 1) % currentPokemon.length;
 	renderOverlayPokemon(currentPokemon[selectedPokemonIndex]);
 }
 
+
 function showPreviousPokemon() {
 	selectedPokemonIndex = (selectedPokemonIndex - 1 + currentPokemon.length) % currentPokemon.length;
 	renderOverlayPokemon(currentPokemon[selectedPokemonIndex]);
 }
+
 
 function changePokemon(indexModifier) {
 	selectedPokemonIndex += indexModifier;
@@ -213,12 +224,14 @@ function changePokemon(indexModifier) {
 	renderOverlayPokemon(currentPokemon[selectedPokemonIndex]);
 }
 
+
 function renderOverlayPokemon(pokemon) {
 	const typesHTML = pokemon.types.map(t => getPokemonTypesTemplate(t)).join("");
 	const bgColor = TYPE_COLORS[pokemon.types[0].type.name] || "#777";
 	document.getElementById("pokemon-overlay").innerHTML = getOverlayPokemonTemplate(pokemon, typesHTML, bgColor);
 	toggleOverlaySection("about");
 }
+
 
 function toggleOverlaySection(section) {
 	let pokemon = currentPokemon[selectedPokemonIndex];
@@ -281,6 +294,7 @@ async function fetchData(path = "") {
 	let response = await fetch(path);
 	return await response.json();
 }
+
 
 function debounce(cb, delay) {
 	let timeout;
